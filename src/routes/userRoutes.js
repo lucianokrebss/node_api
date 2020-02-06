@@ -5,14 +5,20 @@ const controller = require("../controllers/userController");
 //Rotas
 
 //CPF
-router.post("/cpf", controller.postCPF);
+router.post("/CPF", controller.postCPF);
 
 
 //FullName
 router.post("/fullname/:id", controller.postFullnamePerUser);
 
 //Birthday
+router.post("/birthday/:id", controller.postBdayPerUser);
+
 //Phone Number
+router.post("/phone/:id", controller.postPhonePerUser);
+
 //Address
+router.post("/address/:id", controller.postAddressPerUser);
+
 
 module.exports = router;

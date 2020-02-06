@@ -26,27 +26,24 @@ exports.postCPF = async (req, res) => {
   }
 };
 
-//Post FullName per user
+
+//POST FULLNAME
 exports.postFullnamePerUser = async (req, res) => {
   const userId = req.params.id;
-  const {fullName} = req.body;
-  console.log(fullName);
-  const firstName = {fullName}.substr(0,fullName.indexOf(' '));
-  const lastName = {fullName}.substr(fullName.indexOf(' ')+1);
+  const objeto = req.body;
 
-console.log(firstName);
-console.log(lastName);
+  //Get firstName and lastName from FullName
+  const fullName = objeto.fullName;
+  const first = fullName.substring(0, fullName.indexOf(" "));
+  const last = fullName.substring(fullName.indexOf(" ") + 1);
+
+  const namesData = { firstName: first, lastName: last };
 
   try {
     const currentUser = await Users.findByIdAndUpdate(
-      { _id: ObjectID(userId) },
-      { $set: { firstName, lastName } }
+      { _id: objectId(userId) },
+      { $set: namesData }
     );
-    if (currentUser == 0) {
-      return res.status(404).send({
-        error: `Não foi possível localizar o usuário.`
-      });
-    }
     res.status(200).json({
       success: true
     });
@@ -54,3 +51,41 @@ console.log(lastName);
     return res.status(400).json({ error: "Erro ao incluir nome do usuário." });
   }
 };
+
+
+//POST BIRTHDATE
+exports.postBdayPerUser = async (req, res) => {
+const userId = req.params.id;
+
+  try {
+    const currentUser = await Users.findByIdAndUpdate(
+      { _id: objectId(userId) },
+      { $set: req.body }
+    );
+    res.status(200).json({
+      success: true
+    });
+  } catch (e) {
+    return res.status(400).json({ error: "Erro ao incluir data de aniversário do usuário." });
+  }
+};
+
+
+// POST PHONE NUMBER
+exports.postPhonePerUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const currentUser = await Users.findByIdAndUpdate(
+      { _id: objectId(userId) },
+      { $set: req.body }
+    );
+    res.status(200).json({
+      success: true
+    });
+  } catch (e) {
+    return res
+      .status(400)
+      .json({ error: "Erro ao incluir número de telefone do usuário." });
+  }
+}
