@@ -87,6 +87,7 @@ exports.postBdayPerUser = async (req, res) => {
 };
 
 // POST PHONE NUMBER
+// If it does exists just update timestamp, add a new phone number record otherwise
 exports.postPhonePerUser = async (req, res) => {
   const userId = req.params.id;
 
@@ -102,3 +103,27 @@ exports.postPhonePerUser = async (req, res) => {
     return res.status(400).json({ error: "Error adding User's phone number" });
   }
 };
+
+
+//POST ADDRESS
+exports.postAddressPerUser = async (req, res) => {
+  const userId = req.params.id;
+  console.log(req.body)
+
+  const findMatch = await Users.find({
+    address: { $elemMatch: req.body }
+  });
+
+  try {
+    const currentUser = await Users.findByIdAndUpdate(
+      { _id: objectId(userId) },
+      { $setOnInsert: { address: req.body } },{upsert:true}
+    );
+    res.status(200).json({
+      success: true
+    });
+  } catch (e) {
+    return res.status(400).json({ error: "Error adding User's address" });
+  }
+}
+

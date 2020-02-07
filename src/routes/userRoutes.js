@@ -25,7 +25,7 @@ router.post("/birthday/:id", controller.postBdayPerUser);
 router.post("/phone/:id", controller.postPhonePerUser);
 
 //Address
-// router.post("/address/:id", controller.postAddressPerUser);
+router.post("/address/:id", controller.postAddressPerUser);
 
 
 module.exports = router;
