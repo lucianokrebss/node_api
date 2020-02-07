@@ -25,7 +25,8 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Allow-Headers",
-    "Origin, X-requested-With, Content-Type, Accept"
+    "Origin, X-requested-With, Content-Type, Accept",
+    "application/x-www-form-urlencoded"
   );
   next();
 });
