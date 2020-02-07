@@ -4,6 +4,9 @@ const controller = require("../controllers/userController");
 
 //Rotas
 
+//Register User
+router.post("/signup", controller.postSignup); 
+
 //CPF
 router.post("/cpf", controller.postCPF);
 

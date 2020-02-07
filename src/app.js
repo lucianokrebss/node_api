@@ -31,8 +31,10 @@ app.use(function(req, res, next) {
 });
 
 //Rotas
+const sessions = require("./routes/sessionRoute");
 const users = require("./routes/userRoutes");
 
+app.use("/sessions", sessions);
 app.use("/users", users);
 
 

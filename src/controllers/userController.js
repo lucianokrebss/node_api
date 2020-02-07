@@ -1,5 +1,10 @@
 const Users = require("../models/userModel");
 const objectId = require("mongodb").ObjectID;
+const bcrypt = require("bcryptjs");
+const bcryptSalt = 8;
+
+//Post New User
+
 
 //Post CPF
 exports.postCPF = async (req, res) => {
@@ -14,7 +19,7 @@ exports.postCPF = async (req, res) => {
       if (err) {
         return res
           .status(500)
-          .json({ error: "Erro ao salvar o CPF do usuário" });
+          .json({ error: "Error while saving User's CPF" });
       }
       console.log("CPF salvo!");
     });
@@ -22,7 +27,7 @@ exports.postCPF = async (req, res) => {
       success: true
     });
   } catch (e) {
-    return res.status(400).json({ error: "Erro ao enviar o CPF do usuário" });
+    return res.status(400).json({ error: "Error while sending User's CPF" });
   }
 };
 
@@ -44,13 +49,13 @@ console.log(lastName);
     );
     if (currentUser == 0) {
       return res.status(404).send({
-        error: `Não foi possível localizar o usuário.`
+        error: `User was not found`
       });
     }
     res.status(200).json({
       success: true
     });
   } catch (e) {
-    return res.status(400).json({ error: "Erro ao incluir nome do usuário." });
+    return res.status(400).json({ error: "Error to add user" });
   }
 };
