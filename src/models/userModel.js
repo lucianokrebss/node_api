@@ -3,10 +3,8 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
   {
     cpf: { type: String },
-    fullName: {
-      firstName: { type: String },
-      lastName: { type: String }
-    },
+    firstName: { type: String },
+    lastName: { type: String },
     birthday: { type: String },
     phoneNumber: { type: Number },
     address: {
@@ -18,7 +16,10 @@ const userSchema = new mongoose.Schema(
       state: { type: String }
     }
   },
-  { versionKey: false, timestamps: true }
+  {
+    versionKey: false,
+    timestamps: true
+  }
 );
 
 const Users = mongoose.model("Users", userSchema);
