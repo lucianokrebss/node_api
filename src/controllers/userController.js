@@ -49,14 +49,6 @@ exports.postFullnamePerUser = async (req, res) => {
       { _id: objectId(userId) },
       { $set: namesData }
     );
-<<<<<<< HEAD
-    if (currentUser == 0) {
-      return res.status(404).send({
-        error: `User was not found`
-      });
-    }
-=======
->>>>>>> ad373b4e11c4ad39886128f175f09c4d6c82834c
     res.status(200).json({
       success: true
     });
