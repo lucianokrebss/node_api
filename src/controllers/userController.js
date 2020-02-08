@@ -1,36 +1,48 @@
 const Users = require("../models/userModel");
 const objectId = require("mongodb").ObjectID;
 const bcrypt = require("bcryptjs");
-const bcryptSalt = 8;
+const bcryptSalt = 9;
 
-//Post New User
+//POST NEW USER
+exports.postSignup = async (req, res) => {
+  const { email, password } = req.body;
+  const salt = bcrypt.genSaltSync(bcryptSalt);
+  const hashPass = await bcrypt.hashSync(password, salt);
 
-
-//Post CPF
-exports.postCPF = async (req, res) => {
-  const { cpf } = req.body;
-
-  const newCpf = new Users({
-    cpf
+  const newUser = new Users({
+    email,
+    password: hashPass
   });
 
   try {
-    newCpf.save(function(err) {
+    newUser.save(function(err) {
       if (err) {
-        return res
-          .status(500)
-          .json({ error: "Error while saving User's CPF" });
+        return res.status(500).json({ error: "User not saved" });
       }
-      console.log("CPF salvo!");
+      console.log("User saved");
     });
-    return res.status(201).json({
-      success: true
-    });
+    return res.status(201).json({ message: "User successfully registered" });
   } catch (e) {
-    return res.status(400).json({ error: "Error while sending User's CPF" });
+    return res.status(400).json({ error: "Error saving the user" });
   }
 };
 
+//POST CPF
+exports.postCPF = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const currentUser = await Users.findByIdAndUpdate(
+      { _id: objectId(userId) },
+      { $set: req.body }
+    );
+    res.status(200).json({
+      success: true
+    });
+  } catch (e) {
+    return res.status(400).json({ error: "Error saving User's CPF." });
+  }
+};
 
 //POST FULLNAME
 exports.postFullnamePerUser = async (req, res) => {
@@ -57,27 +69,8 @@ exports.postFullnamePerUser = async (req, res) => {
   }
 };
 
-
 //POST BIRTHDATE
 exports.postBdayPerUser = async (req, res) => {
-const userId = req.params.id;
-
-  try {
-    const currentUser = await Users.findByIdAndUpdate(
-      { _id: objectId(userId) },
-      { $set: req.body }
-    );
-    res.status(200).json({
-      success: true
-    });
-  } catch (e) {
-    return res.status(400).json({ error: "Erro ao incluir data de aniversário do usuário." });
-  }
-};
-
-
-// POST PHONE NUMBER
-exports.postPhonePerUser = async (req, res) => {
   const userId = req.params.id;
 
   try {
@@ -89,8 +82,48 @@ exports.postPhonePerUser = async (req, res) => {
       success: true
     });
   } catch (e) {
-    return res
-      .status(400)
-      .json({ error: "Erro ao incluir número de telefone do usuário." });
+    return res.status(400).json({ error: "Erro adding User's birthday." });
+  }
+};
+
+// POST PHONE NUMBER
+// If it does exists just update timestamp, add a new phone number record otherwise
+exports.postPhonePerUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const currentUser = await Users.findByIdAndUpdate(
+      { _id: objectId(userId) },
+      { $addToSet: req.body }
+    );
+    res.status(200).json({
+      success: true
+    });
+  } catch (e) {
+    return res.status(400).json({ error: "Error adding User's phone number" });
+  }
+};
+
+
+//POST ADDRESS
+exports.postAddressPerUser = async (req, res) => {
+  const userId = req.params.id;
+  console.log(req.body)
+
+  const findMatch = await Users.find({
+    address: { $elemMatch: req.body }
+  });
+
+  try {
+    const currentUser = await Users.findByIdAndUpdate(
+      { _id: objectId(userId) },
+      { $setOnInsert: { address: req.body } },{upsert:true}
+    );
+    res.status(200).json({
+      success: true
+    });
+  } catch (e) {
+    return res.status(400).json({ error: "Error adding User's address" });
   }
 }
+
