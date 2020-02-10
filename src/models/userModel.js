@@ -1,22 +1,32 @@
 const mongoose = require("mongoose");
 
+
 const userSchema = new mongoose.Schema(
   {
-    email: { type: String },
+    email: { type: String},
     password: { type: String },
     cpf: { type: String },
     firstName: { type: String },
     lastName: { type: String },
     birthday: { type: String },
-    phoneNumber: [{ type: Number }],
+    requestedAmount: {type: mongoose.Schema.Types.Decimal128, default: "0.0"},
+    phoneNumber: [
+      {
+        _id:false,
+        data: { type: Number },
+        updatedAt: { type: Date, default: Date.now }
+      }
+    ],
     address: [
       {
-        cep: { type: Number },
+        _id:false,
+        cep: { type: String},
         street: { type: String },
-        number: { type: Number },
+        number: { type: String },
         complement: { type: String },
         city: { type: String },
-        state: { type: String }
+        state: { type: String },
+        updatedAt: { type: Date, default: Date.now }
       }
     ]
   },
@@ -25,6 +35,7 @@ const userSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
 
 const Users = mongoose.model("Users", userSchema);
 

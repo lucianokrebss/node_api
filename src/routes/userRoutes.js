@@ -15,17 +15,20 @@ router.use(authMiddleware) //tudo que estiver abaixo, precisa de token.
 router.post("/CPF/:id", controller.postCPF);
 
 
-//FullName
+// //FullName
 router.post("/fullname/:id", controller.postFullnamePerUser);
 
-//Birthday
+// //Birthday
 router.post("/birthday/:id", controller.postBdayPerUser);
 
-//Phone Number
+// //Phone Number
 router.post("/phone/:id", controller.postPhonePerUser);
 
-//Address
+// //Address
 router.post("/address/:id", controller.postAddressPerUser);
+
+// //Amount Requested
+router.post("/amount/:id", controller.postRequestedAmount);
 
 
 module.exports = router;
