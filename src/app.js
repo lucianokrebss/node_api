@@ -6,19 +6,6 @@ const app = express();
 //Conversor
 app.use(express.json());
 
-//Local MongoDB connection
-mongoose
-  .connect("mongodb://localhost:27017/TesteProviDB", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .catch(error => handleError(error));
-
-let db = mongoose.connection;
-db.on("error", console.log.bind(console, "connection error:"));
-db.once("open", function() {
-  console.log("MongoDB connection succeeded");
-});
 
 // Request headers
 app.use(function(req, res, next) {

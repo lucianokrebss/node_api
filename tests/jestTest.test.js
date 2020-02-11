@@ -1,4 +1,4 @@
-// This test fails because 1 !== 2
+//Test to check if Jest is working
 it("Testing to see if Jest works", () => {
     expect(1).toBe(1);
   });

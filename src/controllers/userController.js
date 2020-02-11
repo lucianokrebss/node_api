@@ -20,7 +20,7 @@ exports.postSignup = async (req, res) => {
       if (err) {
         return res.status(500).send({ error: "Error saving the user" });
       }
-      console.log("Registro salvo!");
+      console.log("User registered!");
     });
     return res.status(201).send({
       message: "User successfully registered"
@@ -31,7 +31,7 @@ exports.postSignup = async (req, res) => {
 };
 
 //POST CPF
-exports.postCPF = (req, res) => {
+exports.postCPF = async (req, res) => {
   const userId = req.params.id;
 
   validateCPF();
@@ -82,7 +82,8 @@ exports.postCPF = (req, res) => {
           error: "User not found"
         });
       }
-     return res.status(200).json({success: true});
+      console.log("User's CPF added!");
+      return res.status(200).json({ success: true });
     } catch (e) {
       return res.status(400).json({ error: "Error saving User's CPF." });
     }
@@ -111,6 +112,7 @@ exports.postFullnamePerUser = async (req, res) => {
         error: "User not found"
       });
     }
+    console.log("Username added!");
     res.status(200).json({
       success: true
     });
@@ -128,6 +130,7 @@ exports.postBdayPerUser = async (req, res) => {
       { _id: objectId(userId) },
       { $set: req.body }
     );
+    console.log("User's birthday added!");
     res.status(200).json({
       success: true
     });
@@ -141,7 +144,6 @@ exports.postBdayPerUser = async (req, res) => {
 exports.postPhonePerUser = async (req, res) => {
   const userId = req.params.id;
   const phoneNumb = req.body.data;
-  console.log(phoneNumb);
 
   try {
     const currentUser = await Users.updateOne(
@@ -167,6 +169,7 @@ exports.postPhonePerUser = async (req, res) => {
         error: "User not found"
       });
     }
+    console.log("User's phone number added!");
     res.status(200).json({
       success: true
     });
@@ -175,13 +178,10 @@ exports.postPhonePerUser = async (req, res) => {
   }
 };
 
-
 //POST ADDRESS
-//If user input a different street a new register is created, update otherwise. 
+//If user input a different street a new register is created, update otherwise.
 exports.postAddressPerUser = async (req, res) => {
   const userId = req.params.id;
-  const userStreet = req.body.street;
-  console.log(userStreet);
 
   let {
     cep,
@@ -213,14 +213,13 @@ exports.postAddressPerUser = async (req, res) => {
     authorization
   };
 
- 
   try {
     const currentUser = await Users.updateOne(
       {
         _id: objectId(userId),
         "address.street": { $ne: street }
       },
-      { $addToSet: { address: adressData }}
+      { $addToSet: { address: adressData } }
     );
 
     const currentUser1 = await Users.updateOne(
@@ -243,6 +242,7 @@ exports.postAddressPerUser = async (req, res) => {
         error: "User not found"
       });
     }
+    console.log("User's address added!");
     res.status(200).json({
       success: true
     });
@@ -260,7 +260,6 @@ const buscarCeps = cep => {
     .catch(err => res.status(400).json({ error: "Invalid CEP" }));
 };
 
-
 // POST REQUESTED AMOUNT
 exports.postRequestedAmount = async (req, res) => {
   const userId = req.params.id;
@@ -275,6 +274,7 @@ exports.postRequestedAmount = async (req, res) => {
         error: "User not found"
       });
     }
+    console.log("User's requested amount added!");
     res.status(200).json({
       success: true
     });

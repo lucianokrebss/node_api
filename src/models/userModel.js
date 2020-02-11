@@ -5,24 +5,24 @@ const Currency = mongoose.Types.Currency;
 
 const userSchema = new mongoose.Schema(
   {
-    email: { type: String},
-    password: { type: String },
-    cpf: { type: String },
-    firstName: { type: String },
-    lastName: { type: String },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    cpf: { type: String, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     birthday: { type: String },
-    requestedAmount: {type: Currency},
+    requestedAmount: { type: Currency, required: true },
     phoneNumber: [
       {
-        _id:false,
-        data: { type: Number },
+        _id: false,
+        data: { type: Number, required: true },
         updatedAt: { type: Date, default: Date.now }
       }
     ],
     address: [
       {
-        _id:false,
-        cep: { type: String},
+        _id: false,
+        cep: { type: String },
         street: { type: String },
         number: { type: String },
         complement: { type: String },
