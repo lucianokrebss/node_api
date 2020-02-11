@@ -6,7 +6,7 @@ const app = express();
 //Conversor
 app.use(express.json());
 
-//Conexão local MongoDB
+//Local MongoDB connection
 mongoose
   .connect("mongodb://localhost:27017/TesteProviDB", {
     useNewUrlParser: true,
@@ -20,7 +20,7 @@ db.once("open", function() {
   console.log("MongoDB connection succeeded");
 });
 
-//Headers requisições
+// Request headers
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:4000");
   res.header(
@@ -31,12 +31,18 @@ app.use(function(req, res, next) {
   next();
 });
 
-//Rotas
+//Routes
 const sessions = require("./routes/sessionRoute");
 const users = require("./routes/userRoutes");
 
 app.use("/sessions", sessions);
 app.use("/users", users);
+
+//API-doc
+app.use(express.static('doc'))
+app.get('/api-doc',(req, res) => {
+  res.sendFile(path.join( __dirname + './../doc/index.html'));
+})
 
 
 module.exports = app;

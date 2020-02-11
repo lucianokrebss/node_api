@@ -23,7 +23,7 @@ exports.postSignup = async (req, res) => {
       console.log("Registro salvo!");
     });
     return res.status(201).send({
-      mensagem: "User successfully registered"
+      message: "User successfully registered"
     });
   } catch (e) {
     return res.status(400).json({ error: "Error saving the user" });
@@ -56,7 +56,7 @@ exports.postCPF = (req, res) => {
     )
       return res.status(400).json({ error: "Invalid CPF" });
 
-    // Valida 1o digito
+    // Validate 1st digit
     add = 0;
     for (i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
     rev = 11 - (add % 11);
@@ -64,7 +64,7 @@ exports.postCPF = (req, res) => {
     if (rev != parseInt(cpf.charAt(9)))
       return res.status(400).json({ error: "Invalid CPF" });
 
-    // Valida 2o digito
+    // Validate 2nd digit
     add = 0;
     for (i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
     rev = 11 - (add % 11);
@@ -82,7 +82,7 @@ exports.postCPF = (req, res) => {
           error: "User not found"
         });
       }
-      res.status(200).json({});
+     return res.status(200).json({success: true});
     } catch (e) {
       return res.status(400).json({ error: "Error saving User's CPF." });
     }
@@ -115,7 +115,7 @@ exports.postFullnamePerUser = async (req, res) => {
       success: true
     });
   } catch (e) {
-    return res.status(400).json({ error: "Error to add user" });
+    return res.status(400).json({ error: "Error adding user's name" });
   }
 };
 
@@ -132,7 +132,7 @@ exports.postBdayPerUser = async (req, res) => {
       success: true
     });
   } catch (e) {
-    return res.status(400).json({ error: "Erro adding User's birthday." });
+    return res.status(400).json({ error: "Error adding User's birthday." });
   }
 };
 
@@ -175,11 +175,14 @@ exports.postPhonePerUser = async (req, res) => {
   }
 };
 
-//FALTA ATUALIZAR TIMESTAMP - VIDE PHONENUMBER
+
 //POST ADDRESS
+//If user input a different street a new register is created, update otherwise. 
 exports.postAddressPerUser = async (req, res) => {
-  const addressData = req.body;
   const userId = req.params.id;
+  const userStreet = req.body.street;
+  console.log(userStreet);
+
   let {
     cep,
     street,
@@ -210,18 +213,29 @@ exports.postAddressPerUser = async (req, res) => {
     authorization
   };
 
-  const isEqual = await Users.aggregate(
-    [
-      { $project: { address: 1, addressData: 1, sameElements: { $setEquals: [ "$address", "$addressData" ] }, _id: 0 } }
-    ]
- )
-
- console.log(isEqual);
-
+ 
   try {
-    const currentUser = await Users.findByIdAndUpdate(
-      { _id: objectId(userId) },
-      { $push: { address: adressData } }
+    const currentUser = await Users.updateOne(
+      {
+        _id: objectId(userId),
+        "address.street": { $ne: street }
+      },
+      { $addToSet: { address: adressData }}
+    );
+
+    const currentUser1 = await Users.updateOne(
+      { _id: objectId(userId), "address.street": street },
+      {
+        $set: {
+          "address.$.cep": cep,
+          "address.$.street": street,
+          "address.$.number": number,
+          "address.$.complement": complement,
+          "address.$.city": city,
+          "address.$.data": state,
+          "address.$.updatedAt": new Date()
+        }
+      }
     );
 
     if (!currentUser) {
@@ -245,6 +259,7 @@ const buscarCeps = cep => {
     .then(json => json)
     .catch(err => res.status(400).json({ error: "Invalid CEP" }));
 };
+
 
 // POST REQUESTED AMOUNT
 exports.postRequestedAmount = async (req, res) => {

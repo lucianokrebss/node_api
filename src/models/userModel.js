@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+require('mongoose-currency').loadType(mongoose);
+const Currency = mongoose.Types.Currency;
 
 
 const userSchema = new mongoose.Schema(
@@ -9,7 +11,7 @@ const userSchema = new mongoose.Schema(
     firstName: { type: String },
     lastName: { type: String },
     birthday: { type: String },
-    requestedAmount: {type: mongoose.Schema.Types.Decimal128, default: "0.0"},
+    requestedAmount: {type: Currency},
     phoneNumber: [
       {
         _id:false,
