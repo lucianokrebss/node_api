@@ -19,7 +19,7 @@
     "mongoose": "^5.8.11",
     "mongoose-currency": "^0.2.0",
     "node": "^13.7.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "jest": "^25.1.0",
